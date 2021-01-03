@@ -2,24 +2,24 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:gravity="center"
     android:orientation="vertical">
 
 
-    <FrameLayout
-        android:id="@+id/bar_1_map_fragment_dy"
+    <EditText
+        android:id="@+id/bar_4_name"
+        android:text="输入昵称"
         android:layout_width="match_parent"
-        android:layout_height="310dp" />
-
-    <TextView
+        android:layout_height="wrap_content"/>
+    <Button
+        android:id="@+id/bar_4_btn_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/bg_white"
-        android:text=""
-        android:textColor="@color/bg_black" />
-
-    <FrameLayout
-        android:id="@+id/bar_1_ctrl_fragment_dy"
+        android:text="编辑昵称"/>
+    <Button
+        android:id="@+id/bar_4_btn_head"
         android:layout_width="match_parent"
-        android:layout_height="300dp" />
+        android:layout_height="wrap_content"
+        android:text="编辑头像"/>
 
 </LinearLayout>

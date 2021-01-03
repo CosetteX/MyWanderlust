@@ -14,6 +14,7 @@ import com.example.wanderlust.adapter.ImagePickerAdapter;
 import com.example.wanderlust.adapter.ImagePickerAdapter2;
 import com.example.wanderlust.utils.StringUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ScheduleDetailActivity extends FragmentActivity {
@@ -24,7 +25,7 @@ public class ScheduleDetailActivity extends FragmentActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_schedule_detail);
 
-        String strDate = getIntent().getStringExtra("strDate");
+        long strDate = getIntent().getLongExtra("strDate",0);
         String strLocation =  getIntent().getStringExtra("strLocation");
         String strType = getIntent().getStringExtra("strType");
         String strUlr = getIntent().getStringExtra("strUlr");
@@ -38,10 +39,10 @@ public class ScheduleDetailActivity extends FragmentActivity {
         TextView tvType = findViewById(R.id.tv_type);
 
         tvContent.setText(strContent);
-        tvDate.setText(strDate);
+        tvDate.setText(StringUtils.getStringDate(strDate));
         tvCity.setText(strLocation);
         tvType.setText(strType);
-        int value = StringUtils.compareDate(StringUtils.getCurrentTime(), strDate);
+        int value = StringUtils.compareDate(StringUtils.getCurrentTime(), StringUtils.getStringDate(strDate));
         if (value == -1) {
             //当前时间小于创建时间  过期了
             tvStatus.setText("已过期");
@@ -60,7 +61,9 @@ public class ScheduleDetailActivity extends FragmentActivity {
         });
 
 
-        List<String> mList1 = StringUtils.stringsToList(strUlr);
+        List<String> mList1= new ArrayList<String>();
+        if(strUlr!=null)
+            mList1 = StringUtils.stringsToList(strUlr);
         RecyclerView recyclerView = findViewById(R.id.recyclerView);
         GridLayoutManager manager = new GridLayoutManager(this, 4);
         recyclerView.setLayoutManager(manager);

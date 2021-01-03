@@ -14,7 +14,7 @@ import android.widget.Toast;
 
 import com.example.wanderlust.R;
 import com.example.wanderlust.adapter.ImagePickerAdapter;
-import com.example.wanderlust.items.Bar_2_Item_new;
+import com.example.wanderlust.items.Bar_2_Item;
 import com.example.wanderlust.items.WheelViewDataBean;
 import com.example.wanderlust.dbmanager.ScheduleDao;
 import com.example.wanderlust.utils.BaseDialog;
@@ -23,6 +23,14 @@ import com.example.wanderlust.utils.LocationUtils;
 import com.example.wanderlust.utils.StringUtils;
 import com.example.wanderlust.widget.IWheelViewSelectedListener;
 import com.example.wanderlust.widget.MyOnClickListener;
+/*
+import com.lljjcoder.Interface.OnCityItemClickListener;
+import com.lljjcoder.bean.CityBean;
+import com.lljjcoder.bean.DistrictBean;
+import com.lljjcoder.bean.ProvinceBean;
+import com.lljjcoder.citywheel.CityConfig;
+ */
+//import com.lljjcoder.citypickerview.widget.CityPicker;
 import com.lljjcoder.citypickerview.widget.CityPicker;
 import com.luck.picture.lib.PictureSelector;
 import com.luck.picture.lib.config.PictureConfig;
@@ -48,7 +56,7 @@ public class InsertAttendanceInfoActivity extends FragmentActivity implements Vi
     private TextView tvChooseType;
     private EditText etContent;
     private TextView tvChooseCity;
-//    private CityPickerView mPicker = new CityPickerView();
+    //private CityPickerView mPicker = new CityPickerView();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -57,19 +65,20 @@ public class InsertAttendanceInfoActivity extends FragmentActivity implements Vi
         initView();
         currentDay = getIntent().getStringExtra("currentDay");
 
-//        mPicker.init(this);
+        //mPicker.init(this);
 
         initWheelViewData();
         initWheelDialog();
 
         ScheduleDao dao = new ScheduleDao(InsertAttendanceInfoActivity.this);
-        List<Bar_2_Item_new> bar2ItemnewList =  dao.queyrByDateScheduleList("2020-12-29");
+        List<Bar_2_Item> bar2ItemnewList =  dao.queyrByDateScheduleList("2020-12-29");
 
         Log.d("Dong", "---<> " + bar2ItemnewList.size());
 
-        //获取当前城市信息
-        String location = LocationUtils.getInstance().getLocations(this);
+        //获取当前定位信息
+        String location= LocationUtils.getInstance().getLocations(this);
         tvChooseCity.setText(location);
+
     }
 
     private void initView() {
@@ -182,32 +191,10 @@ public class InsertAttendanceInfoActivity extends FragmentActivity implements Vi
     }
 
     private void chooseCity() {
-//        CityConfig cityConfig = new CityConfig.Builder()
-//                .province("北京") //设置默认显示省份
-//                .build();
-//        mPicker.setConfig(cityConfig);
-//        //监听选择点击事件及返回结果
-//        mPicker.setOnCityItemClickListener(new OnCityItemClickListener() {
-//            @Override
-//            public void onSelected(ProvinceBean province, CityBean city, DistrictBean district) {
-//                //省份
-//                if (province != null && city != null && district != null) {
-//                    tvChooseCity.setText(province.getName() + city.getName());
-//                }
-//            }
-//            @Override
-//            public void onCancel() {
-//
-//            }
-//        });
-//        //显示
-//        mPicker.showCityPicker();
-
-        CityPicker cityPicker = new CityPicker.Builder(InsertAttendanceInfoActivity.this)
+        CityPicker cityPicker=new CityPicker.Builder(InsertAttendanceInfoActivity.this)
                 .textSize(14)
                 .title("地址选择")
                 .titleBackgroundColor("#FFFFFF")
-//                .titleTextColor("#696969")
                 .confirTextColor("#696969")
                 .cancelTextColor("#696969")
                 .province("北京市")
@@ -221,12 +208,12 @@ public class InsertAttendanceInfoActivity extends FragmentActivity implements Vi
                 .itemPadding(10)
                 .onlyShowProvinceAndCity(true)
                 .build();
+
         cityPicker.show();
         //监听方法，获取选择结果
         cityPicker.setOnCityItemClickListener(new CityPicker.OnCityItemClickListener() {
             @Override
             public void onSelected(String... citySelected) {
-                //省份
                 String province = citySelected[0];
                 //城市
                 String city = citySelected[1];
@@ -249,11 +236,6 @@ public class InsertAttendanceInfoActivity extends FragmentActivity implements Vi
             return;
         }
 
-//        if (mList1.isEmpty()) {
-//            Toast.makeText(InsertAttendanceInfoActivity.this, "日程图片不能为空", Toast.LENGTH_SHORT).show();
-//            return;
-//        }
-
         if (TextUtils.isEmpty(strType)||"请选择".equals(strType)) {
             Toast.makeText(InsertAttendanceInfoActivity.this, "请选择日程类型", Toast.LENGTH_SHORT).show();
             return;
@@ -264,8 +246,14 @@ public class InsertAttendanceInfoActivity extends FragmentActivity implements Vi
             return;
         }
 
-        Bar_2_Item_new bar2Itemnew =
-                new Bar_2_Item_new(System.currentTimeMillis(),strContent, StringUtils.listToString(mList1,","),strType,strCity, StringUtils.parse(currentDay).getTime());
+      //  Bar_2_Item bar2Itemnew =
+      //         new Bar_2_Item(System.currentTimeMillis(),strContent,StringUtils.listToString(mList1,","),strType,strCity,StringUtils.parse(currentDay).getTime(),"21:00");
+               // new Bar_2_Item(System.currentTimeMillis(),strContent, StringUtils.listToString(mList1,","),strType,strCity,currentDay,"21:21");
+        Bar_2_Item bar2Itemnew = null;
+        if(mList1.size()!=0)
+            bar2Itemnew = new Bar_2_Item(System.currentTimeMillis(),strContent,StringUtils.listToString(mList1,","),strType,strCity,StringUtils.parse(currentDay).getTime(),"21:00");
+        else
+            bar2Itemnew = new Bar_2_Item(System.currentTimeMillis(),strContent,null,strType,strCity,StringUtils.parse(currentDay).getTime(),"21:00");
         ScheduleDao dao = new ScheduleDao(InsertAttendanceInfoActivity.this);
         dao.add(bar2Itemnew);
 
